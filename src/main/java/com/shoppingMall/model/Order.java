@@ -2,6 +2,7 @@ package com.shoppingMall.model;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import static javax.persistence.GenerationType.SEQUENCE;
 

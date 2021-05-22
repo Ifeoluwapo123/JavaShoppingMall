@@ -12,6 +12,11 @@ public class PersonService {
     @Autowired
     PersonRepository personRepository;
 
+    /**
+     * CREATE operation on Person
+     * @param person
+     * @return boolean
+     * */
     public boolean createUser(Person person){
         boolean flag = false;
 
@@ -21,6 +26,7 @@ public class PersonService {
             Person userData = personRepository.findPersonByEmail(person.getEmail());
 
             if(userData == null) {
+                person.setPosition("user");
                 personRepository.save(person);
                 flag = true;
             }
@@ -32,6 +38,12 @@ public class PersonService {
         return flag;
     }
 
+    /**
+     * GET operation on Person
+     * @param email
+     * @param password
+     * @return boolean(true for successful update and false on failure on post)
+     * */
     public Person loginUser(String email, String password){
 
         Person userData = null;

@@ -36,6 +36,9 @@ public class Person {
     @Column(name = "gender", nullable = false, columnDefinition = "VARCHAR(45)")
     private String gender;
 
+    @Column(name = "position", nullable = false, columnDefinition = "VARCHAR(45)")
+    private String position;
+
     public Long getId() {
         return id;
     }
@@ -84,4 +87,11 @@ public class Person {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
 }

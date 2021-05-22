@@ -13,6 +13,12 @@ public class OrderService {
     @Autowired
     OrderRepository orderRepository;
 
+    /**
+     * GET operation on Order
+     * @param person
+     * @param product
+     * @return order by person on a particular product
+     * */
     public Order getOrder(Person person, Product product){
         Order order = null;
 
@@ -25,6 +31,13 @@ public class OrderService {
         return order;
     }
 
+    /**
+     * POST operation on Order
+     * add orders made by users on a product
+     * @param person
+     * @param product
+     * @return boolean
+     * */
     public boolean addOrder(Person person, Product product){
         boolean flag = false;
 
@@ -55,4 +68,24 @@ public class OrderService {
 
         return flag;
     }
+
+    /**
+     * DELETE operation on Order
+     * @param orderId
+     * @return boolean
+     * */
+    public boolean deleteOrder(Long orderId){
+        boolean flag = false;
+
+        try {
+            orderRepository.deleteById(orderId);
+
+            flag = true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return flag;
+    }
+
 }

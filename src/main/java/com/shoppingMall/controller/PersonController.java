@@ -1,5 +1,6 @@
 package com.shoppingMall.controller;
 
+import com.shoppingMall.POJO.OrderMapper;
 import com.shoppingMall.model.Person;
 import com.shoppingMall.model.Product;
 import com.shoppingMall.service.PersonService;
@@ -39,6 +40,25 @@ public class PersonController {
         return "signup";
     }
 
+    /**
+     * Get request to process logging out to the index page
+     * destroy every attributes saved in session
+     * redirect to index page
+     * */
+    @RequestMapping(value = "/processLogout", method = RequestMethod.GET)
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+
+        HttpSession session = request.getSession();
+        session.invalidate();
+
+        return "redirect:/";
+    }
+
+    /**
+     * GET request to show Home page made to users
+     * redirects user if not in session
+     * send required data(products, user, orders) to be loaded in the page
+     * */
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public String showHome(HttpServletRequest request, HttpServletResponse response,
                                Model model, HttpSession session) {
@@ -51,21 +71,34 @@ public class PersonController {
 
         model.addAttribute("product", product);
 
+        List<OrderMapper> orders = productService.getOrdersOnProductBy(person.getId());
         //products in store
         List<Product> products = productService.getProducts();
 
         model.addAttribute("products", products);
         model.addAttribute("user", person);
+        model.addAttribute("orders", orders);
+        model.addAttribute("size", orders.size());
 
         return "home";
     }
 
+    /**
+     * GET request to show the login page
+     * returns the page
+     * */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String showLogin(HttpServletRequest request, HttpServletResponse response, Model model) {
         model.addAttribute("user", new Person());
         return "index";
     }
 
+    /**
+     * POST request to process login system
+     * redirects user if validation fails
+     * else redirect user to home page
+     * and store user in session
+     * */
     @RequestMapping(value = "/loginProcessing", method = RequestMethod.POST)
     public String processLogin(HttpServletRequest request, HttpServletResponse response,
         @ModelAttribute("user") Person person, HttpSession session) {
@@ -82,6 +115,11 @@ public class PersonController {
         }
     }
 
+    /**
+     * POST request for registration
+     * validate user inputs
+     * if fails redirect back to registration page
+     * */
     @RequestMapping(value = "/signupProcessing", method = RequestMethod.POST)
     public String processRegistration(HttpServletRequest request, HttpServletResponse response,
                                @ModelAttribute("person") Person user, RedirectAttributes redirectAttributes) {

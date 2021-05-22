@@ -31,7 +31,7 @@ public class Validation {
             genderEnum = Gender.valueOf(gender.toUpperCase());
             flag = true;
         }catch (IllegalArgumentException error){
-            error.printStackTrace();
+            flag = false;
         }
 
         return flag;
@@ -70,7 +70,7 @@ public class Validation {
      * @return boolean
      * */
     public static boolean validateFullName(String fullName){
-        String regex = "^[a-zA-Z]{3,}(?: [a-zA-Z]+){0,2}$";
+        String regex = "^[a-zA-Z]{3,}(?: [a-zA-Z]+){1,2}$";
         return fullName.matches(regex);
     }
 

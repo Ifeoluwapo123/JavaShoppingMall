@@ -35,7 +35,7 @@ public class Product {
     private String imageExt;
 
     @Column(name = "price", nullable = false, columnDefinition = "VARCHAR(45)")
-    private String price;
+    private Long price;
 
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "personId", referencedColumnName = "id")
@@ -81,11 +81,11 @@ public class Product {
         this.image = image;
     }
 
-    public String getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 

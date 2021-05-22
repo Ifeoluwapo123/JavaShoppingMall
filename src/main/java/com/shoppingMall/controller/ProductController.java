@@ -23,12 +23,16 @@ public class ProductController {
     @Autowired
     private OrderService orderService;
 
+    /**
+     * POST request to post products
+     * redirects user if not in session
+     * save product to database
+     * */
     @RequestMapping(value = "/adminFormProcessing", method = RequestMethod.POST)
-    public String processLogin(HttpServletRequest request, HttpServletResponse response,
+    public String processProductUpload(HttpServletRequest request, HttpServletResponse response,
                                @ModelAttribute("product") Product product, @RequestParam("file") MultipartFile imageFile, HttpSession session) {
 
         Person person = (Person) session.getAttribute("user");
-
         if (person == null) return "redirect:/";
 
         //set person who made the product which is the admin
@@ -41,9 +45,13 @@ public class ProductController {
         }
 
         return "redirect:/home";
-
     }
 
+    /**
+     * GET request to display a particular product
+     * redirects user if not in session
+     * orders made on the product is also displayed
+     * */
     @RequestMapping(value = "/product/{id}", method = RequestMethod.GET)
     public String showProductInfo(@PathVariable("id") Long id, Model model, HttpSession session) {
 
@@ -66,34 +74,86 @@ public class ProductController {
         return "product-details";
     }
 
-    //add_to_cart
-    @RequestMapping(value = "/add_to_cart/{id}", method = RequestMethod.GET)
-    public String addToCart(@PathVariable("id") Long id, Model model, HttpSession session) {
+    /**
+     * POST request to add product to cart
+     * redirects user if not in session
+     * save orders in the database, or perhaps fails
+     * */
+    @RequestMapping(value = "/add_to_cart/{id}", method = RequestMethod.POST)
+    public @ResponseBody String addCart(@PathVariable("id") Long id, Model model, HttpSession session) {
 
         Product product = productService.getProductById(id);
 
         Person person = (Person) session.getAttribute("user");
+        if (person == null) return "redirect:/";
 
         boolean success = orderService.addOrder(person, product);
         if(success){
             System.out.println("success");
+            return "success";
         }else{
             System.out.println("Not successful");
+            return "failed";
         }
+    }
+
+    /**
+     * GET request to show edit page
+     * redirects user if not in session
+     * */
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public String edit(@PathVariable("id") Long id, Model model, HttpSession session) {
+
+        Person person = (Person) session.getAttribute("user");
 
         if (person == null) return "redirect:/";
 
-        Order order = orderService.getOrder(person, product);
-        Long numberOfOrders = 0L;
+        Product product = productService.getProductById(id);
 
-        if(order != null){
-            numberOfOrders = order.getMyOrder();
+        model.addAttribute("products", product);
+        return "edit";
+    }
+
+    /**
+     * GET request to edit product
+     * redirects user if not in session
+     * edit product in the database
+     * or perhaps fails
+     * */
+    @RequestMapping(value = "/editPostProcessing", method = RequestMethod.POST)
+    public String edit(@ModelAttribute("product") Product product, HttpSession session, @RequestParam("file") MultipartFile imageFile) {
+
+        Person person = (Person) session.getAttribute("user");
+        if (person == null) return "redirect:/";
+
+        if(productService.editProduct(imageFile, product)){
+            session.setAttribute("message", "Successfully edited Posted!!!");
+        }else{
+            session.setAttribute("message", "failed to edit Posted!!!");
         }
 
-        model.addAttribute("product", product);
-        model.addAttribute("orders", numberOfOrders);
+        return "redirect:/home";
+    }
 
-        return "product-details";
+    /**
+     * GET request to delete product
+     * redirects user if not in session
+     * delete product in the database
+     * or perhaps fails
+     * */
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    public String delete(@PathVariable("id") Long id, HttpSession session) {
+
+        Person person = (Person) session.getAttribute("user");
+        if (person == null) return "redirect:/";
+
+        if( productService.deleteProduct(id)){
+            session.setAttribute("message", "Successfully deleted Product!!!");
+        }else{
+            session.setAttribute("message", "failed to delete Product!!!");
+        }
+
+        return "redirect:/home";
     }
 
 }

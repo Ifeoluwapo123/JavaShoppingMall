@@ -30,7 +30,9 @@
   <main id="main">
     <div id="portfolio-details" class="portfolio-details" th:with="data = ${product}">
       <div class="container">
-
+        <button type="button" th:onclick="'closeWin('+${product.getId()}+')'" class="close btn btn-danger" aria-label="Close" style="float: right">
+          <span aria-hidden="true">&times;</span>
+        </button>
         <div class="row">
 
           <div class="col-lg-8">
@@ -80,6 +82,7 @@
   <script th:src="@{//localhost:3000/assets/vendor/purecounter/purecounter.js}"></script>
   <script th:src="@{//localhost:3000/assets/vendor/swiper/swiper-bundle.min.js}"></script>
   <script th:src="@{//localhost:3000/assets/vendor/waypoints/noframework.waypoints.js}"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
   <!-- Template Main JS File -->
   <script th:src="@{//localhost:3000/assets/js/main.js}"></script>
@@ -89,7 +92,23 @@
       let newCount = Number(data);
       newCount++;
       document.getElementById("count").innerText = newCount.toString();
-      window.location.href = "/add_to_cart/"+id;
+
+      $.ajax({
+        type: 'POST',
+        url: '/add_to_cart/'+id,
+        // data: {"postId": postId},
+
+        success: function(data){
+          console.log(data);
+        },
+        error: function(){
+          console.log("error");
+        }
+      });
+    }
+
+    function closeWin(id){
+      window.location.href = "/home";
     }
   </script>
 </body>

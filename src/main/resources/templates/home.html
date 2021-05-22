@@ -73,26 +73,25 @@
             and become a leader in retail,
             <span style="color:  rgb(48, 42, 42);">entertainment and attractions.</span>
         </h2>
-
         <nav
-                id="navbar"
-                class="navbar"
-                style="
-            border: 1px solid rgb(20, 18, 18);
-            width: 32.5%;
-            padding: 10px;
-            background: rgba(239, 243, 240, 0.87);
-            z-index: 1;
-            border-radius: 15px;
-            border-bottom-left-radius: 20px;
-            border-bottom-left-radius: 20px;
-          "
+            id="navbar"
+            class="navbar"
+            style="
+                border: 1px solid rgb(20, 18, 18);
+                padding: 10px;
+                background: rgba(239, 243, 240, 0.87);
+                z-index: 1;
+                border-radius: 15px;
+                border-bottom-left-radius: 20px;
+                border-bottom-left-radius: 20px;
+            "
         >
             <ul>
                 <li><a class="nav-link active" href="#header">Home</a></li>
                 <li><a class="nav-link" href="#portfolio">Products</a></li>
                 <li><a class="nav-link" href="#profile">Profile</a></li>
                 <li><a class="nav-link" href="#contact">Admin</a></li>
+                <li><a class="nav-link" th:href="@{/processLogout}" style="color: rgb(48, 42, 42);">Logout</a></li>
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
@@ -175,9 +174,9 @@
                     <div class="col-lg-4 col-md-6 portfolio-item filter-web">
                         <div class="portfolio-wrap">
                             <img
-                                    th:src="${product.getImage()}"
-                                    class="img-fluid"
-                                    alt=""
+                                th:src="${product.getImage()}"
+                                class="img-fluid"
+                                alt=""
                             />
                             <div class="portfolio-info">
                                 <h4 th:text="${product.getCategory()}"></h4>
@@ -205,110 +204,61 @@
     <div class="container">
         <div class="section-title">
             <h2>MY PROFILE</h2>
+            <p th:text="${user.fullName}"></p>
+            <p th:text="${user.email}"></p>
+            <p th:text="${user.phoneNumber}"></p>
             <p>Product(s) added to cart</p>
         </div>
-        <div>Cart (2 items)</div>
-        <div class="row portfolio-container">
-            <div class="col-lg-6 col-md-6 portfolio-item filter-web">
-                <div class="portfolio-wrap">
-                    <img
-                            src="assets/img/portfolio/portfolio-2.jpg"
-                            class="img-fluid"
-                            alt=""
-                    />
-                    <div class="portfolio-info">
-                        <h4>Web 3</h4>
-                        <p>Web</p>
-                        <div class="portfolio-links">
-                            <a
-                                    href="assets/img/portfolio/portfolio-2.jpg"
-                                    data-gallery="portfolioGallery"
-                                    class="portfolio-lightbox"
-                                    title="Web 3"
-                            ><i class="bx bx-plus"></i
-                            ></a>
-                            <a
-                                    href="product-details.html"
+        <div>Cart <span th:text="${size}"></span> items</div>
+
+        <div th:each="order: ${orders}">
+            <div class="row portfolio-container">
+                <div class="col-lg-6 col-md-6 portfolio-item filter-web">
+                    <div class="portfolio-wrap">
+                        <img
+                                th:src="${order.getProduct().getImage()}"
+                                class="img-fluid"
+                                alt=""
+                        />
+                        <div class="portfolio-info">
+                            <h4 th:text="${order.getProduct().getCategory()}"></h4>
+                            <p th:text="${order.getProduct().getName()}">Web</p>
+                            <div class="portfolio-links">
+                                <a
+                                    th:onclick="'prod('+${order.getProduct().getId()}+')'"
                                     data-gallery="portfolioDetailsGallery"
                                     data-glightbox="type: external"
                                     class="portfolio-details-lightbox"
                                     title="Portfolio Details"
-                            ><i class="bx bx-link"></i
-                            ></a>
+                                ><i class="bx bx-link"></i
+                                ></a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div
+                <div
                     class="col-lg-6 col-md-6 portfolio-item filter-web"
                     style="line-height: 50px"
-            >
-                <h4>ITEM</h4>
-                <div><strong>QUANTITY</strong>: 1</div>
-                <div><strong> UNIT PRICE</strong>: # 500</div>
-                <div><strong>SUBTOTAL</strong>: # 500</div>
-                <br/>
-                <button type="button" class="btn btn-warning">
-                    CONTINUE SHOPPING
-                </button>
-                <button type="button" class="btn btn-success">
-                    PROCEED TO CHECKOUT
-                </button>
-            </div>
-        </div>
-        <div class="row portfolio-container">
-            <div class="col-lg-6 col-md-6 portfolio-item filter-web">
-                <div class="portfolio-wrap">
-                    <img
-                            src="assets/img/portfolio/portfolio-2.jpg"
-                            class="img-fluid"
-                            alt=""
-                    />
-                    <div class="portfolio-info">
-                        <h4>Web 3</h4>
-                        <p>Web</p>
-                        <div class="portfolio-links">
-                            <a
-                                    href="sassets/img/portfolio/portfolio-2.jpg"
-                                    data-gallery="portfolioGallery"
-                                    class="portfolio-lightbox"
-                                    title="Web 3"
-                            ><i class="bx bx-plus"></i
-                            ></a>
-                            <a
-                                    href="product-details.html"
-                                    data-gallery="portfolioDetailsGallery"
-                                    data-glightbox="type: external"
-                                    class="portfolio-details-lightbox"
-                                    title="Portfolio Details"
-                            ><i class="bx bx-link"></i
-                            ></a>
-                        </div>
-                    </div>
+                >
+                    <h4>ITEM</h4>
+                    <div><strong>ORDER :</strong><span th:text="${order.getMyOrder()}"></span></div>
+                    <div><strong> UNIT PRICE: #</strong><span th:text="${order.getProduct().getPrice()}"></span></div>
+                    <div><strong>SUBTOTAL: #</strong><span th:text="${order.getSum()}"></span></div>
+                    <br/>
+                    <button th:onclick="'delOrder('+${order.getId()}+')'" type="button" class="btn btn-warning">
+                        DELETE ORDER
+                    </button>
+                    <button type="button" class="btn btn-success">
+                        PROCEED TO CHECKOUT
+                    </button>
                 </div>
-            </div>
-            <div
-                    class="col-lg-6 col-md-6 portfolio-item filter-web"
-                    style="line-height: 50px"
-            >
-                <h4>ITEM</h4>
-                <div><strong>QUANTITY</strong>: 1</div>
-                <div><strong> UNIT PRICE</strong>: # 500</div>
-                <div><strong>SUBTOTAL</strong>: # 500</div>
-                <br/>
-                <button type="button" class="btn btn-warning">
-                    CONTINUE SHOPPING
-                </button>
-                <button type="button" class="btn btn-success">
-                    PROCEED TO CHECKOUT
-                </button>
             </div>
         </div>
     </div>
 </section>
 <!-- =======================================================Admin Section ============================================================ -->
 <!-- =======================================================Admin Section ============================================================ -->
-<section id="contact" class="contact">
+<section th:if="${user.getPosition() == 'admin'}" id="contact" class="contact">
     <div class="container" th:with="user = ${user}">
         <div class="section-title">
             <h2>Contact</h2>
@@ -358,25 +308,24 @@
                 <div class="col-md-6 form-group" style="margin-bottom: 20px">
                     <label for="name">Product Name</label><br/>
                     <input
-                            type="text"
-                            th:field="*{name}"
-                            th:value="${product.getName()}"
-                            name="name"
-                            class="form-control"
-                            id="name"
-                            placeholder="Product Name"
-                            required
+                        type="text"
+                        th:field="*{name}"
+                        th:value="${product.getName()}"
+                        name="name"
+                        class="form-control"
+                        id="name"
+                        placeholder="Product Name"
+                        required
                     />
                 </div>
                 <div class="col-md-6 form-group" style="margin-bottom: 20px">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="inputGroupSelect01"
-                        >Categories of Products</label
+                        >Category of the Product (Choose) </label
                         >
                     </div>
                     <br/>
                     <select class="custom-select" id="inputGroupSelect01" th:field="*{category}">
-                        <option name="category" th:value="${'Choose'}" selected>Choose...</option>
                         <option name="category" th:value="${'MEN WEAR'}">MEN WEAR</option>
                         <option name="category" th:value="${'WOMEN WEAR'}">WOMEN WEAR</option>
                         <option name="category" th:value="${'COSMETICS'}">COSMETICS</option>
@@ -390,7 +339,7 @@
                         name="name"
                         class="form-control"
                         id="count"
-                        placeholder="Product Name"
+                        placeholder="Product Quantity"
                         required
                     />
                 </div>
@@ -410,21 +359,21 @@
                 <div class="col-md-6 form-group" style="margin-bottom: 20px">
                     <label for="file_img">Upload Image of the product</label><br/>
                     <input
-                            type="file"
-                            name="file"
-                            class="form-control"
-                            id="file_img"
-                            required
+                        type="file"
+                        name="file"
+                        class="form-control"
+                        id="file_img"
+                        required
                     />
                 </div><br/>
                 <div class="col-md-6 form-group" style="margin-bottom: 20px">
                     <label for="description">The Product Description</label><br/>
                     <textarea
-                            name="description"
-                            th:field="*{description}"
-                            id="description"
-                            rows="5"
-                            cols="50"
+                        name="description"
+                        th:field="*{description}"
+                        id="description"
+                        rows="5"
+                        cols="55"
                     ></textarea>
                 </div>
                 <br/>
@@ -453,8 +402,8 @@
                             <td th:text="${pro.getCategory()}"></td>
                             <td th:text="${pro.getPrice()}"></td>
                             <td th:text="${pro.getQuantity()}"></td>
-                            <td><button class="btn btn-danger">Delete<i class="fa fa-remove"></i></button></td>
-                            <td><button type="button" class="btn btn-warning">Edit</button></td>
+                            <td><button class="btn btn-danger" th:onclick="'del('+${pro.getId()}+')'">Delete<i class="fa fa-remove"></i></button></td>
+                            <td><button type="button" class="btn btn-warning" th:onclick="'edit('+${pro.getId()}+')'">Edit</button></td>
                         </tr>
                     </div>
                 </tbody>
@@ -465,10 +414,6 @@
 <!-- End Contact Section -->
 
 <div class="credits">
-    <!-- All the links in the footer should remain intact. -->
-    <!-- You can delete the links only if you purchased the pro version. -->
-    <!-- Licensing information: https://bootstrapmade.com/license/ -->
-    <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/personal-free-resume-bootstrap-template/ -->
     Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
 </div>
 
@@ -480,12 +425,29 @@
 <script src="assets/vendor/purecounter/purecounter.js"></script>
 <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
 <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
 <!-- Template Main JS File -->
 <script src="assets/js/main.js"></script>
 <script>
+
     function prod(id){
         window.location.href = "/product/"+id;
+    }
+
+    function del(id){
+        console.log("delete "+id);
+        window.location.href = "/delete/"+id;
+    }
+
+    function edit(id){
+        console.log("edit "+id);
+        window.location.href = "/edit/"+id;
+    }
+
+    function delOrder(id){
+        console.log("delOrder "+id);
+        window.location.href = "/deleteOrder/"+id;
     }
 </script>
 </body>
